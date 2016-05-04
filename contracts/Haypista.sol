@@ -1,7 +1,7 @@
-// First, a simple pista contract
+// First, a simple haypista contract
 // Allows to place value on a game
 
-/// @title ThePista
+/// @title Haypista
 /// @author inasacu
 contract Haypista {
   address public manager;
@@ -39,7 +39,7 @@ contract Haypista {
   }
 
   mapping(uint256 => Pista) pistas;
-  uint public gameId;
+  uint public gameId = 0;
 
   /* default point values */
   uint single = 1;
@@ -75,16 +75,15 @@ contract Haypista {
   function Haypista(bytes32 _name) {
     manager = msg.sender;
     amount = msg.value;
-    gameId = block.number;
     name = _name;
-    setDefaultAmount(amount);
+    setDefaultAmount(amount + (amount * feeRate));
   }
 
   /// @notice addPista a new pista by manager
   /// @param _homeTeam The name of the home team
   /// @param _awayTeam The name of the away team
   /// @param _starts the pista start time
-  function addPista(bytes32 _homeTeam, bytes32 _awayTeam, uint _starts) onlyManager {
+  function addPista(uint256 _gameId, bytes32 _homeTeam, bytes32 _awayTeam, uint _starts) onlyManager {
     Pista newPista = pistas[gameId];
     newPista.homeTeam = _homeTeam;
     newPista.awayTeam = _awayTeam;
@@ -97,8 +96,7 @@ contract Haypista {
     newPista.winnings = 0;
     newPista.fees = 0;
     newPista.remainder = 0;
-    // newPista.state = State.Created;
-    gameId = block.number;
+    gameId += 1;
   }
 
   /// @notice setHomeAway name by manager
@@ -127,7 +125,7 @@ contract Haypista {
     uint256 initialAmount = msg.value;
     uint256 fees = 0;
 
-    defaultAmount += defaultAmount * feeRate;
+    // defaultAmount += defaultAmount * feeRate;
 
     Pista thePista = pistas[_gameId];
     var allPlayers = thePista.players;

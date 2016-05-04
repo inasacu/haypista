@@ -1,35 +1,34 @@
 contract('Haypista', function(accounts) {
 
 	it("should assert true", function(done) {
-		var thePista = Haypista.at(Haypista.deployed_address);
+		var pista = Haypista.at(Haypista.deployed_address);
 		assert.isTrue(true);
 		done(); // stops tests at this point
 	});
 
 
 
-	it("Initial thePista settings should match", function(done) {
-		var thePista = Haypista.at(Haypista.deployed_address);
-		var weiAmount = web3.toWei(.05, 'ether');
-		// var gameId = block.number;
+	it("Initial Haypista settings should match", function(done) {
+	  var pista = Haypista.at(Haypista.deployed_address);
+	  var weiAmount = web3.toWei(1, 'ether');
 
-		Haypista.new({ from: accounts[0] }).then(function(thePista) {
+	  Haypista.new({ from: accounts[0] }).then(function(pista) {
 
-				thePista.defaultAmount.call().then(function(defaultAmount) {
-		      		assert.equal(defaultAmount, weiAmount, "Default amount doesn't match!");
-		      		return thePista.feeRate.call();
-		    	}).then( function(feeRate) {
-		      		assert.equal(feeRate, 45 / 10000, "Fee Rate doesn't match!");
-		      		return thePista.name.call();
-		      	}).then( function(name) {
-		      		assert.equal(name, 'The Pista', "name doesn't match!");
-		      		return thePista.manager.call();
-		    	}).then( function(manager) {
-		      		assert.equal(manager, accounts[0], "manager doesn't match!");
-		      		done();
-		    	}).catch(done);
+	      pista.defaultAmount.call().then(function(defaultAmount) {
+	            assert.equal(defaultAmount.valueOf(), weiAmount, "Default amount doesn't match!");
+	            return pista.feeRate.call();
+	        }).then( function(feeRate) {
+	            assert.equal(feeRate.valueOf(), 0, "Fee Rate doesn't match!");
+	            return pista.name.call();
+	          }).then( function(name) {
+	            assert.equal(name.valueOf(), 'The Pista', "name doesn't match!");
+	            return pista.manager.call();
+	        }).then( function(manager) {
+	            assert.equal(manager, accounts[0], "manager doesn't match!");
+	            done();
+	        }).catch(done);
 
-		}).catch(done);
+	  }).catch(done);
 
 	});
 
